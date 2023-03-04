@@ -1,0 +1,17 @@
+dbConfig:               # 数据库 配置 信息
+  username: "root"
+  password: "20050901@mysqlHrx"
+  hostname: "127.0.0.1"
+  port: 3306
+  dbname: "Itg_Doc"
+  charset: "utf8mb4"
+  parseTime: True
+  local: "Local"
+  
+mailConfig:
+  host: "smtp.feishu.cn"
+  port: 465
+  from: "UNI@itoken.team"
+  fromName: "小幸运"
+  username: "UNI@itoken.team"
+  password: "teTxnl1djwZZdVo2"

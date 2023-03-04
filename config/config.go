@@ -1,13 +1,14 @@
 package config
 
 import (
+	"fmt"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 	"os"
 )
 
-// 连接数据库的相关信息
+// 数据库配置的相关信息
 type dbConfig struct {
 	Username  string `yaml:"username"`
 	Password  string `yaml:"password"`
@@ -19,6 +20,7 @@ type dbConfig struct {
 	Local     string `yaml:"local"`
 }
 
+// 发送邮件的相关信息
 type mailConfig struct {
 	Host     string `yaml:"host"`
 	Port     int    `yaml:"port"`
@@ -36,14 +38,17 @@ type config struct {
 var Config config
 
 func init() {
-	yamlFile, err := os.ReadFile("./conf/Config.yaml")
+	// 读取文件信息
+	yamlFile, err := os.ReadFile("./Config.yaml")
 	if err != nil {
 		log.Errorf("read file error: %+v", errors.WithStack(err))
 	}
 	err = yaml.Unmarshal(yamlFile, &Config)
+	fmt.Printf("%v\n", Config)
 	if err != nil {
 		log.Errorf("unmarshal error: %+v", errors.WithStack(err))
 	}
+	// 读取数据库配置信息并存储
 	if dbUsername := os.Getenv("db_username"); dbUsername != "" {
 		Config.DbConfig.Username = dbUsername
 	}
