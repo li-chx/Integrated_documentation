@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -39,12 +38,12 @@ var Config config
 
 func init() {
 	// 读取文件信息
-	yamlFile, err := os.ReadFile("./Config.yaml")
+	yamlFile, err := os.ReadFile("./conf/Config.yaml")
 	if err != nil {
 		log.Errorf("read file error: %+v", errors.WithStack(err))
 	}
 	err = yaml.Unmarshal(yamlFile, &Config)
-	fmt.Printf("%v\n", Config)
+	//fmt.Printf("%v\n", Config)
 	if err != nil {
 		log.Errorf("unmarshal error: %+v", errors.WithStack(err))
 	}

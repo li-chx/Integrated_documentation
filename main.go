@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"github.com/Haroxa/Integrated_documentation/router"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"time"
 )
 
 func init() {
@@ -24,4 +26,5 @@ func init() {
 
 func main() {
 	router.Start()
+	fmt.Println(time.Now().Unix())
 }
