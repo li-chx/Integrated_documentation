@@ -3,7 +3,6 @@ package service
 import (
 	"fmt"
 	"github.com/Haroxa/Integrated_documentation/common"
-	"github.com/Haroxa/Integrated_documentation/config"
 	"time"
 )
 
@@ -89,9 +88,25 @@ func getHtmlContent(MsgType int, DesireContent string, MessageContent string) st
 	return html
 }
 
+type mailConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	From     string `yaml:"from"`
+	FromName string `yaml:"fromName"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+}
+
 func SendMail(EmailAddress string, MsgType int, DesireContent string, MessageContent string) error {
 
-	mailConfig := config.GetMailConfig()
+	mailConfig := mailConfig{
+		Host:     "smtp.163.com",
+		Port:     25,
+		From:     "Haroxa@163.com",
+		FromName: "Haroxa",
+		Username: "Haroxa@163.com",
+		Password: "OAOVJUWLKBCAEULZ",
+	}
 	html := getHtmlContent(MsgType, DesireContent, MessageContent)
 	message := gomail.NewMessage()
 	message.SetAddressHeader("From", mailConfig.From, mailConfig.FromName)
