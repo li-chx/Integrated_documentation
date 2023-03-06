@@ -1,9 +1,24 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/Haroxa/Integrated_documentation/common"
+	"github.com/Haroxa/Integrated_documentation/helper"
+	"github.com/Haroxa/Integrated_documentation/model"
+	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
+	"net/http"
+)
 
 func AddCarShare(c *gin.Context) {
-	//UserId := c.MustGet("user_id").(int)
+	Userid := c.MustGet("user_id").(int)
+	carshare := &model.CarShare{}
+	if err := c.ShouldBindJSON(carshare); err != nil {
+		log.Errorf("Invalid Param %+v", errors.WithStack(err))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "数据绑定失败", err))
+		return
+	}
+	carshare.Userid = Userid
 
 }
 

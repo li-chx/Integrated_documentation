@@ -9,9 +9,11 @@ import (
 func Start() {
 	e := gin.Default()
 
-	e.GET("/mail", controller.Mail)
+	//e.GET("/mail", controller.Mail)
 	e.POST("/user/login", controller.Login)
 	e.POST("/user/register", controller.Register)
+
+	//e.POST("/user/register/reg", controller.Reg)
 
 	user := e.Group("user")
 	user.Use(middleware.AuthMiddleware)
