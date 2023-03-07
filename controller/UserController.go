@@ -1,38 +1,35 @@
 package controller
 
 import (
-	"encoding/base64"
 	"fmt"
-	"math/rand"
-	//"strconv"
-	"time"
-
 	"github.com/Haroxa/Integrated_documentation/common"
 	"github.com/Haroxa/Integrated_documentation/helper"
 	"github.com/Haroxa/Integrated_documentation/model"
+	"github.com/fanjindong/go-cache"
 	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+	"math/rand"
+	//"strconv"
+	"time"
 
 	"net/http"
 )
 
-func Mail(c *gin.Context, email string) bool {
+var ca = cache.NewMemCache()
+
+func Mail(email string) error {
 	email = "2379008409@qq.com"
-	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(1000000)
+	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(900000) + 100000
+	//fmt.Println("\n", verification)
 	ver := fmt.Sprintf("%d", verification)
+	ca.Set("verification", ver, cache.WithEx(1*time.Minute))
+	//v, _ := ca.Get("verification")
+	//fmt.Println(v, "\n")
 	err := helper.SendMail(email, 1, ver)
-	if err != nil { //   读取  用户 并判断
-		log.Errorf("Invalid Param %+v", errors.WithStack(err))
-		c.JSON(http.StatusBadRequest, helper.ApiReturn(-1, "发送失败", err))
-		return false
-	}
-	enbyte := []byte(base64.StdEncoding.EncodeToString([]byte(ver)))
-	fmt.Println(enbyte)
-	c.Set("enbyte", enbyte)
-	c.JSON(http.StatusBadRequest, helper.ApiReturn(1, "发送成功", nil))
-	return true
+	//var err = error(nil)
+	return err
 }
 
 func Register(c *gin.Context) {
@@ -52,43 +49,27 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	User.Email = userLogin.Email
-	User.Password = userLogin.Password
-	if err := model.CreateUser(&User); err != nil {
-		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "创建用户失败", err))
+	if err := Mail(userLogin.Email); err != nil {
+		log.Errorf("Invalid Param %+v", errors.WithStack(err))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "发送失败", err))
 		return
 	}
+	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "发送成功", nil))
 
-	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "注册成功，请前往登录", User))
-
-	/*
-		go func() {
-			if !Mail(c, userLogin.Email) {
-				return
-			}
-		}()
-	*/
-	//c.Set("email", userLogin.Email)
-	//c.Set("password", userLogin.Password)
-	//ogin(c)
 }
 
-func Regs(c *gin.Context) {
+func Reg(c *gin.Context) {
 	User := model.User{}
 	c.ShouldBindJSON(&User)
 	ver := c.Query("verify")
-	de, err := base64.StdEncoding.DecodeString(string(c.MustGet("enbyte").([]byte)))
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	debyte := string(de)
-	fmt.Println(de, "\n", debyte)
-	if ver != debyte {
+	Ver, _ := ca.Get("verification")
+	//fmt.Println(Ver, "\n")
+	if ver != Ver {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "验证失败", nil))
 		return
 	}
 
-	if err = model.CreateUser(&User); err != nil {
+	if err := model.CreateUser(&User); err != nil {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "创建用户失败", err))
 		return
 	}
@@ -131,7 +112,7 @@ func UpdateUser(c *gin.Context) {
 	UserId := c.MustGet("user_id").(int)
 	user, err := model.GetUserById(UserId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "获取用户失败", err))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "获取失败", err))
 		return
 	}
 	if user.Email == "" {
@@ -159,10 +140,10 @@ func UpdateUser(c *gin.Context) {
 	}
 
 	if err = model.UpdateUser(user, mp); err != nil {
-		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "信息更新失败", err))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "更新失败", err))
 		return
 	}
-	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "信息更新成功", nil))
+	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "更新成功", nil))
 }
 
 func GetUserById(c *gin.Context) {
@@ -187,15 +168,18 @@ func GetAllUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "获取用户失败", err))
 		return
 	}
-	msg := fmt.Sprintf("获取成功，得到用户数为：%d", count)
+	//if count == 0 {
+	//	c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeSuccess, "目前无订单", err))
+	//	return
+	//}
+	msg := fmt.Sprintf("已获取用户数:%d", count)
 	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, msg, users))
 }
 
 func DeleteUser(c *gin.Context) {
 	UserId := c.MustGet("user_id").(int)
-	var user model.User
-	var err error
-	if user, err = model.GetUserById(UserId); err != nil {
+	user, err := model.GetUserById(UserId)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "获取用户失败", err))
 		return
 	}

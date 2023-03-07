@@ -1,32 +1,35 @@
 package model
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type CarShare struct {
 	Userid      int    `json:"userid"gorm:"userid"`
 	Id          int    `json:"id"gorm:"id;primary_key;auto_increment"`
-	Require     string `json:"require"`
-	Destination string `json:"destination"`
-	Address     string `json:"address"`
 	Begintime   string `json:"begintime"`
-	Endtime     string `json:"endtime"`
-	Pending     []int  `json:"pending,omitempty"`
-	Member      []int  `json:"member,omitempty"`
+	Address     string `json:"address"`
+	Destination string `json:"destination"`
 	Num         int    `json:"num"`
-	Mannum      int    `json:"mannum"`
-	Womannum    int    `json:"womannum"`
 	Maxnum      int    `json:"maxnum"`
-	Status      string `json:"status"`
+	Luggage     string `json:"luggage"`
+	Box         int    `json:"box"`
+	Bag         int    `json:"bag"`
+	Contact     string `json:"contact"`
 }
 
 func CreateCarShare(sharer *CarShare) error {
 	return db.Create(sharer).Error
 }
 
-func GetCarShareByDestination(destination string) (CarShare, error) {
-	var sharer CarShare
-	err := db.Where("destination=?", destination).First(&sharer).Error
-	return sharer, err
+func GetCarShareByDestination(destination string) ([]CarShare, int, error) {
+	sharers := make([]CarShare, 10)
+	var c int64
+	err := db.Where("destination=?", destination).Find(&sharers).Count(&c).Error
+	if err == gorm.ErrRecordNotFound {
+		err = nil
+	}
+	return sharers, int(c), err
 }
 
 func GetCarShareById(CarShareId int) (CarShare, error) {
@@ -36,6 +39,16 @@ func GetCarShareById(CarShareId int) (CarShare, error) {
 		err = nil
 	}
 	return sharer, err
+}
+
+func GetCarShareByUser(Userid int) ([]CarShare, int, error) {
+	sharers := make([]CarShare, 10)
+	var c int64
+	err := db.Where("userid=?", Userid).Find(&sharers).Count(&c).Error
+	if err == gorm.ErrRecordNotFound {
+		err = nil
+	}
+	return sharers, int(c), err
 }
 
 func UpdateCarShare(sharer CarShare, mp interface{}) error {

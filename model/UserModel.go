@@ -51,17 +51,17 @@ func GetUserById(UserId int) (User, error) {
 	return user, err
 }
 
-func UpdateUser(user User, mp interface{}) error {
-	//对指定的用户模型，更新多个字段值，并判断是否有误
-	return db.Model(&user).Updates(mp).Error
-}
-
 func GetAllUser() ([]User, int, error) {
 	users := make([]User, 1000) //user模型切片
 	var c int64
 	err := db.Find(&users).Count(&c).Error //找到所有用户并赋值
 	//Count函数，直接返回查询匹配的行数。
 	return users, int(c), err
+}
+
+func UpdateUser(user User, mp interface{}) error {
+	//对指定的用户模型，更新多个字段值，并判断是否有误
+	return db.Model(&user).Updates(mp).Error
 }
 
 func DeleteUser(user User) error {

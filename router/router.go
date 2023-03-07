@@ -13,6 +13,8 @@ func Start() {
 	e.POST("/user/login", controller.Login)
 	e.POST("/user/register", controller.Register)
 
+	e.POST("/user/register/reg", controller.Reg)
+
 	//e.POST("/user/register/reg", controller.Reg)
 
 	user := e.Group("user")
@@ -32,6 +34,7 @@ func Start() {
 			carshare.DELETE("/delete", controller.DeleteCarShare)
 		}
 	}
-
+	e.GET("/carshare/getall", controller.GetAllCarShare)
+	e.GET("/carshare/getbydestination", controller.GetCarShareByDestination)
 	e.Run(":8080")
 }
