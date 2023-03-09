@@ -250,7 +250,7 @@ func UpdateTeacher(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "更新失败", err))
 		return
 	}
-	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "更新成功", Teacher))
+	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "更新成功", nil))
 }
 
 // 删除

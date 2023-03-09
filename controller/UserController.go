@@ -20,7 +20,8 @@ import (
 var ca = cache.NewMemCache()
 
 func Mail(email string) error {
-	email = "2379008409@qq.com"
+	email = "2379008409@qq.com" // 这个为测试数据
+
 	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(900000) + 100000 //fmt.Println("\n", verification)
 	ver := fmt.Sprintf("%d", verification)
 	ca.Set("verification", ver, cache.WithEx(1*time.Minute)) //v, _ := ca.Get("verification") //fmt.Println(v, "\n")
