@@ -10,7 +10,7 @@ dbConfig:               # 数据库 配置 信息
   
 mailConfig:
   host: "smtp.163.com"
-  port: 25
+  port: 465
   from: "Haroxa@163.com"
   fromName: "集成文档"
   username: "Haroxa@163.com"

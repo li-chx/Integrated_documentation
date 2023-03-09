@@ -70,7 +70,7 @@ func Reg(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "注册成功，请前往登录", User))
+	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "注册成功，请前往登录", nil))
 }
 
 func Login(c *gin.Context) {
