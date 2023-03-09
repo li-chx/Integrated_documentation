@@ -22,35 +22,35 @@ type Teacher struct {
 }
 
 var Callname = map[string]interface{}{
-	"总是": "0", "经常": "0", "偶尔": "0", "从不": "0", "sum": "0",
+	"总是": 0, "经常": 0, "偶尔": 0, "从不": 0, "sum": 0,
 }
 var CNorder = map[int]string{
 	1: "总是", 2: "经常", 3: "偶尔", 4: "从不",
 }
 
 var Homework = map[string]interface{}{
-	"很多": "0", "较多": "0", "正常": "0", "较少": "0", "没有": "0", "sum": "0",
+	"很多": 0, "较多": 0, "正常": 0, "较少": 0, "没有": 0, "sum": 0,
 }
 var HWorder = map[int]string{
 	1: "很多", 2: "较多", 3: "正常", 4: "较少", 5: "没有",
 }
 
 var Mark = map[string]interface{}{
-	"多为90+": "0", "多为80+": "0", "多为70+": "0", "多为60+": "0", "sum": "0",
+	"多为90+": 0, "多为80+": 0, "多为70+": 0, "多为60+": 0, "sum": 0,
 }
 var MKorder = map[int]string{
 	1: "多为90+", 2: "多为80+", 3: "多为70+", 4: "多为60+",
 }
 
 var Finishway = map[string]interface{}{
-	"闭卷考试": "0", "开卷考试": "0", "大作业": "0", "结课论文": "0", "sum": "0",
+	"闭卷考试": 0, "开卷考试": 0, "大作业": 0, "结课论文": 0, "sum": 0,
 }
 var FWorder = map[int]string{
 	1: "闭卷考试", 2: "开卷考试", 3: "大作业", 4: "结课论文",
 }
 
 var Score = map[string]interface{}{
-	"scores": []float64{}, "sum": "0",
+	"score": 0, "sum": 0,
 }
 
 func CreateTeacher(ta *Teacher) error {

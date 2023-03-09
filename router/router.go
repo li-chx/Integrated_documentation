@@ -46,8 +46,7 @@ func Start() {
 	e.GET("/carshare/getbydestination", controller.GetCarShareByDestination)
 
 	e.GET("/teacher/getall", controller.GetAllTeacher)
-	e.GET("/teacher/getbyname", controller.GetTeacherByName)
-	e.GET("/teacher/getbycourse", controller.GetTeacherByCourse)
+	e.GET("/teacher/getbynameandcourse", controller.GetTeacherByNameAndCourse)
 
-	e.Run(":8080")
+	e.Run(":9090")
 }
