@@ -1,47 +1,22 @@
 package model
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"gorm.io/gorm"
 )
 
 type CarShare struct {
-	Userid      int                    `json:"userid" gorm:"userid"`
-	Id          int                    `json:"id" gorm:"id;primary_key;auto_increment"`
-	Begintime   string                 `json:"begintime"`
-	Address     string                 `json:"address"`
-	Destination string                 `json:"destination"`
-	Num         int                    `json:"num"`
-	Maxnum      int                    `json:"maxnum"`
-	Luggage     string                 `json:"luggage"`
-	Luggages    map[string]interface{} `json:"luggages" gorm:"-"`
-	Lugg        string                 `json:"-" gorm:"column:luggages"`
-	Box         int                    `json:"box"`
-	Bag         int                    `json:"bag"`
-	Contact     string                 `json:"contact"`
-}
-
-func (data *CarShare) BeforeSave() error {
-	if data.Luggages == nil {
-		return nil
-	}
-
-	b, err := json.Marshal(&data.Luggages)
-	if err != nil {
-		return err
-	}
-
-	data.Lugg = string(b)
-	return nil
-}
-
-// AfterFind 查询之后
-func (data *CarShare) AfterFind() error {
-	if data.Lugg == "" {
-		return nil
-	}
-
-	return json.Unmarshal([]byte(data.Lugg), &data.Luggages)
+	Userid      int    `json:"userid" gorm:"userid"`
+	Id          int    `json:"id" gorm:"id;primary_key;auto_increment"`
+	Begintime   string `json:"begintime"`
+	Address     string `json:"address"`
+	Destination string `json:"destination"`
+	Num         int    `json:"num"`
+	Maxnum      int    `json:"maxnum"`
+	Luggage     string `json:"luggage"`
+	Box         int    `json:"box"`
+	Bag         int    `json:"bag"`
+	Contact     string `json:"contact"`
 }
 
 func CreateCarShare(sharer *CarShare) error {
