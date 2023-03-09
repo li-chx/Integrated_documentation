@@ -21,14 +21,10 @@ var ca = cache.NewMemCache()
 
 func Mail(email string) error {
 	email = "2379008409@qq.com"
-	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(900000) + 100000
-	//fmt.Println("\n", verification)
+	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(900000) + 100000 //fmt.Println("\n", verification)
 	ver := fmt.Sprintf("%d", verification)
-	ca.Set("verification", ver, cache.WithEx(1*time.Minute))
-	//v, _ := ca.Get("verification")
-	//fmt.Println(v, "\n")
-	err := helper.SendMail(email, 1, ver)
-	//var err = error(nil)
+	ca.Set("verification", ver, cache.WithEx(1*time.Minute)) //v, _ := ca.Get("verification") //fmt.Println(v, "\n")
+	err := helper.SendMail(email, 1, ver)                    //var err = error(nil)
 	return err
 }
 
@@ -62,8 +58,7 @@ func Reg(c *gin.Context) {
 	User := model.User{}
 	c.ShouldBindJSON(&User)
 	ver := c.Query("verify")
-	Ver, _ := ca.Get("verification")
-	//fmt.Println(Ver, "\n")
+	Ver, _ := ca.Get("verification") //fmt.Println(Ver, "\n")
 	if ver != Ver {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "验证失败", nil))
 		return
@@ -78,10 +73,7 @@ func Reg(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	//fmt.Println("OK,start to login")
-	//email := c.MustGet("email").(string)
-	//password := c.MustGet("password").(string)
-
+	//fmt.Println("OK,start to login") //email := c.MustGet("email").(string) //password := c.MustGet("password").(string)
 	userLogin := &model.UserLogin{}                     //  初始化  用户  模型
 	if err := c.ShouldBindJSON(userLogin); err != nil { //   读取  用户 并判断
 		log.Errorf("Invalid Param %+v", errors.WithStack(err))
@@ -98,8 +90,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := helper.CreatToken(User.Id)
-	//fmt.Println("3\n%+v", token)
+	token, err := helper.CreatToken(User.Id) //fmt.Println("3\n%+v", token)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "创建token失败", err))
 		return
@@ -119,24 +110,18 @@ func UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "用户不存在", nil))
 		return
 	}
-	u := &model.User{}
-	//fmt.Println("\n\n\n", user)
+	u := &model.User{}                         //fmt.Println("\n\n\n", user)
 	if err = c.ShouldBindJSON(u); err != nil { //   读取  用户 并判断
 		log.Errorf("Invalid Param %+v", errors.WithStack(err))
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "数据绑定失败", err))
 		return
-	}
+	} //data, _ := json.Marshal(u) //mp := make(map[string]interface{}) //json.Unmarshal(data, &mp)
 
-	//data, _ := json.Marshal(u)
-	//mp := make(map[string]interface{})
-	//json.Unmarshal(data, &mp)
 	mp := structs.Map(u)
 	for k, v := range mp {
 		if v == "" || v == 0 {
 			delete(mp, k)
-		} else {
-			//fmt.Printf("[ %v : %v ]\n", k, v)
-		}
+		} //fmt.Printf("[ %v : %v ]\n", k, v)
 	}
 
 	if err = model.UpdateUser(user, mp); err != nil {
@@ -167,11 +152,7 @@ func GetAllUser(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "获取用户失败", err))
 		return
-	}
-	//if count == 0 {
-	//	c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeSuccess, "目前无订单", err))
-	//	return
-	//}
+	} //if count == 0 { //	c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeSuccess, "目前无订单", err)) //	return //}
 	msg := fmt.Sprintf("已获取用户数:%d", count)
 	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, msg, users))
 }

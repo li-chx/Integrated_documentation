@@ -12,7 +12,7 @@ func Start() {
 	//e.GET("/mail", controller.Mail)
 	e.POST("/user/login", controller.Login)
 	e.POST("/user/register", controller.Register)
-
+	e.POST("/test", controller.Test)
 	e.POST("/user/register/reg", controller.Reg)
 
 	//e.POST("/user/register/reg", controller.Reg)
@@ -33,8 +33,21 @@ func Start() {
 			carshare.PUT("/update", controller.UpdateCarShare)
 			carshare.DELETE("/delete", controller.DeleteCarShare)
 		}
+
+		teacher := user.Group("teacher")
+		{
+			teacher.POST("/add", controller.AddTeacher)
+			teacher.GET("/getbyid", controller.GetTeacherById)
+			teacher.PUT("/update", controller.UpdateTeacher)
+			teacher.DELETE("delete", controller.DeleteTeacher)
+		}
 	}
 	e.GET("/carshare/getall", controller.GetAllCarShare)
 	e.GET("/carshare/getbydestination", controller.GetCarShareByDestination)
+
+	e.GET("/teacher/getall", controller.GetAllTeacher)
+	e.GET("/teacher/getbyname", controller.GetTeacherByName)
+	e.GET("/teacher/getbycourse", controller.GetTeacherByCourse)
+
 	e.Run(":8080")
 }

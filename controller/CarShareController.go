@@ -7,20 +7,24 @@ import (
 	"github.com/Haroxa/Integrated_documentation/model"
 	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
+
 	"net/http"
+
 	"strconv"
 )
 
 func AddCarShare(c *gin.Context) {
 	Userid := c.MustGet("user_id").(int)
 	carshare := &model.CarShare{}
-	if err := c.ShouldBindJSON(carshare); err != nil {
+	if err := c.ShouldBindBodyWith(carshare, binding.JSON); err != nil {
 		log.Errorf("Invalid Param %+v", errors.WithStack(err))
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "数据绑定失败", err))
 		return
 	}
+
 	carshare.Luggage = fmt.Sprintf("箱数:%d,包数:%d", carshare.Box, carshare.Bag)
 	carshare.Userid = Userid
 	if err := model.CreateCarShare(carshare); err != nil {
@@ -40,7 +44,7 @@ func GetCarShareById(c *gin.Context) {
 		return
 	}
 	if carshare.Id == 0 {
-		c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeError, "用户不存在", nil))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "用户不存在", nil))
 		return
 	}
 
@@ -68,7 +72,7 @@ func GetCarShareByDestination(c *gin.Context) {
 	}
 	//fmt.Println(carshares, "\n", count)
 	//if count == 0 {
-	//	c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
+	//	c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
 	//	return
 	//}
 	msg := fmt.Sprintf("已获取个数为:%d", count)
@@ -84,7 +88,7 @@ func GetCarShareByUser(c *gin.Context) {
 		return
 	}
 	//if count == 0 {
-	//	c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
+	//	c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
 	//	return
 	//}
 	msg := fmt.Sprintf("已获取个数为:%d", count)
@@ -99,7 +103,7 @@ func GetAllCarShare(c *gin.Context) {
 		return
 	}
 	//if count == 0 {
-	//	c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
+	//	c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeSuccess, "目前无订单", nil))
 	//	return
 	//}
 	msg := fmt.Sprintf("已获取个数为:%d", count)
@@ -116,7 +120,7 @@ func UpdateCarShare(c *gin.Context) {
 		return
 	}
 	if carshare.Id == 0 {
-		c.JSON(http.StatusNoContent, helper.ApiReturn(common.CodeError, "用户不存在", nil))
+		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "用户不存在", nil))
 		return
 	}
 
