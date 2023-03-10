@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+    Igt-doc:
+        image: igt-doc
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+            args:
+                BuildConfig: Develop
+        ports:
+            - 9091:9090
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
