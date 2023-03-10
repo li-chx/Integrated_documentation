@@ -34,7 +34,7 @@ func AddCarShare(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "创建失败", err))
 		return
 	}
-	c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeSuccess, "创建成功", nil))
+	c.JSON(http.StatusOK, helper.ApiReturn(common.CodeSuccess, "创建成功", nil))
 }
 
 // 获取，通过 id

@@ -20,6 +20,7 @@ import (
 var ca = cache.NewMemCache()
 
 func Mail(email string) error {
+	ca.Set("email", email)
 	email = "2379008409@qq.com" // 这个为测试数据
 
 	verification := rand.New(rand.NewSource(time.Now().UnixNano())).Int63n(900000) + 100000 //fmt.Println("\n", verification)
@@ -60,7 +61,8 @@ func Reg(c *gin.Context) {
 	c.ShouldBindJSON(&User)
 	ver := c.Query("verify")
 	Ver, _ := ca.Get("verification") //fmt.Println(Ver, "\n")
-	if ver != Ver {
+	Email, _ := ca.Get("email")      // 邮箱检验
+	if ver != Ver || User.Email != Email {
 		c.JSON(http.StatusBadRequest, helper.ApiReturn(common.CodeError, "验证失败", nil))
 		return
 	}
