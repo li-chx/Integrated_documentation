@@ -9,6 +9,6 @@ services:
             args:
                 BuildConfig: Develop
         ports:
-            - 9091:9090
+            - 9090:9090
         extra_hosts:
             - "host.docker.internal:host-gateway"
